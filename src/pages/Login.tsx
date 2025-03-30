@@ -10,6 +10,8 @@ const LoginForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(error);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 

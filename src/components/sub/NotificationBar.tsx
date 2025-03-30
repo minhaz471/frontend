@@ -11,6 +11,8 @@ const NotificationBar = () => {
 
   const url = "/notifications/all";
 
+  console.log(error);
+
   const auth = useContext(AuthContext);
 
   if (!auth) {

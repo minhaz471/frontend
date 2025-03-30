@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/authContext";
 import { Link } from "react-router-dom";
-import DropDown from "./sub/DropDown";
+// import DropDown from "./sub/DropDown";
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -101,7 +101,7 @@ const Header: React.FC = () => {
           className="cursor-pointer text-2xl max-[640px]:text-lg transition-all duration-300 hover:text-gray-300 focus:text-gray-300 hover:scale-110"
         />
       </div>
-      {isDropOpen && <DropDown></DropDown>}
+      {/* {isDropOpen && <DropDown></DropDown>} */}
 
       {isMobileMenuOpen && (
         <div className="fixed top-[64px] left-0 w-full h-[calc(100vh-64px)] bg-black bg-opacity-50 flex justify-center items-center z-50">

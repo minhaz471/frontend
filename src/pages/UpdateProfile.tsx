@@ -8,6 +8,8 @@ const UpdateProfile = () => {
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  console.log(user);
   
   const params = useParams();
   const authContext = useContext(AuthContext);

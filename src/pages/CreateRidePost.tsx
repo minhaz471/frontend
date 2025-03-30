@@ -18,7 +18,9 @@ const CreateRidePost = () => {
   const [fromSuggestions, setFromSuggestions] = useState([]);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string| null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  console.log(loading, error);
 
   const auth = useContext(AuthContext);
 

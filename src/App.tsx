@@ -9,15 +9,17 @@ import Signup from "./pages/Signup";
 import Header from "./components/Header";
 import { AuthContext } from "./context/authContext";
 import CreateRidePost from "./pages/CreateRidePost";
-import { useTheme } from "./context/themeContext";
+// import { useTheme } from "./context/themeContext";
 import { useSocketContext } from "./context/socketContext";
 import UnauthenticatedHeader from "./components/UnauthenticatedHeader";
 
 const App: React.FC = () => {
   const auth = useContext(AuthContext);
-  const { darkMode } = useTheme();
+  // const { darkMode } = useTheme();
   const { socket } = useSocketContext();
   const [notifications, setNotifications] = useState<any[]>([]);
+
+  console.log(notifications);
 
   useEffect(() => {
     if (!socket) return;
