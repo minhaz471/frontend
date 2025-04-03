@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/authContext.tsx';
 import SocketContextProvider from './context/socketContext.tsx'
 import { ThemeProvider } from './context/themeContext.tsx'
+import { GeneralProvider } from './context/generalContext.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -15,7 +16,9 @@ createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <SocketContextProvider>
           <ThemeProvider>
-            <App></App>
+            <GeneralProvider>
+              <App></App>
+            </GeneralProvider>
           </ThemeProvider>
 
 

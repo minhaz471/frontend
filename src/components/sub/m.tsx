@@ -4,16 +4,12 @@ import 'leaflet/dist/leaflet.css';
 
 interface MapProps {
   center: L.LatLngExpression;
-  zoom?: number;
-  darkMode?: boolean;
-  className?: string;
+
 }
 
 const Map = ({ 
   center = [0, 0], 
-  zoom = 13, 
-  darkMode = false, 
-  className = "" 
+
 }: MapProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
@@ -27,14 +23,13 @@ const Map = ({
       mapRef.current = L.map(mapContainerRef.current, {
         zoomControl: false,
         preferCanvas: true,
-      }).setView(center, zoom);
+      }).setView(center);
 
       L.control.zoom({ position: 'topright' }).addTo(mapRef.current);
 
       tileLayerRef.current = L.tileLayer(
-        darkMode 
-          ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-          : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+       
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           noWrap: true
@@ -73,20 +68,19 @@ const Map = ({
 
   useEffect(() => {
     if (mapRef.current) {
-      mapRef.current.setView(center, zoom);
+      mapRef.current.setView(center);
       updateMarker();
       mapRef.current.invalidateSize(); 
     }
-  }, [center, zoom]);
+  }, [center]);
 
   useEffect(() => {
     if (mapRef.current && tileLayerRef.current) {
       mapRef.current.removeLayer(tileLayerRef.current);
       
       tileLayerRef.current = L.tileLayer(
-        darkMode 
-          ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-          : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+       
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           noWrap: true
@@ -95,12 +89,12 @@ const Map = ({
       
       mapRef.current.invalidateSize(); 
     }
-  }, [darkMode]);
+  }, []);
 
   return (
     <div 
       ref={mapContainerRef}
-      className={`h-full w-full ${className} `}
+      className={`h-full w-full  `}
       style={{ position: 'sticky' }}
     />
   );

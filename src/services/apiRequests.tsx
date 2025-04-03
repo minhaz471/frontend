@@ -1,5 +1,26 @@
 import axiosJWT from "./axiosInstance";
 
+
+export const putRequest = async (
+  data: any,
+  url: string,
+): Promise<any> => {
+  try {
+    const response = await axiosJWT.put(url, data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    // if (err.response) {
+    // } else if (err.request) {
+    // } else {
+    // }
+    throw err; 
+  }
+};
+
 export const postRequest = async (
   data: any,
   url: string,

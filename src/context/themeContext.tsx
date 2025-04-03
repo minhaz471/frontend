@@ -33,7 +33,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
-// Custom Hook for accessing theme
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
