@@ -19,6 +19,7 @@ const App: React.FC = () => {
   const { darkMode } = useTheme(); // Get dark mode state
   const { socket } = useSocketContext();
   const [notifications, setNotifications] = useState<any[]>([]);
+  console.log(notifications);
   const generalContext = useContext(GeneralContext);
 
   if (!generalContext) {

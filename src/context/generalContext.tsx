@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { getRequest } from "../services/apiRequests";
-import axiosJWT from "../services/axiosInstance";
+// import axiosJWT from "../services/axiosInstance";
 import { AuthContext } from "./authContext.tsx";
 import { useContext } from "react";
 
@@ -19,6 +19,9 @@ export const GeneralProvider: React.FC<GeneralProviderProps> = ({ children }) =>
   const [unreadNotificationCount, setUnreadNotificationCount] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  console.log(error);
+  console.log(loading);
 
   const auth = useContext(AuthContext);
 
