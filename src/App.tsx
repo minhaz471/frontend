@@ -54,7 +54,7 @@ const App: React.FC = () => {
     : "bg-gray-50 text-gray-900 min-h-screen";
 
   return (
-    <div className={appBackground}>
+    <div className={!user? "": appBackground}>
       {/* Header */}
       {user ? <Header /> : <UnauthenticatedHeader />}
 

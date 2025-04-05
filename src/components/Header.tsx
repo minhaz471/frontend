@@ -17,6 +17,8 @@ import NotificationBar from "./sub/NotificationBar";
 import { useTheme } from "../context/themeContext";
 import { GeneralContext } from "../context/generalContext";
 import { putRequest } from "../services/apiRequests";
+import blueImage from "../static/blue.png";
+import whiteImage from "../static/white.png";
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -57,7 +59,7 @@ const Header: React.FC = () => {
     const response = await putRequest({}, "/notifications/update");
     generalContext.setUnreadNotificationCount(0);
     console.log(response);
-  }
+  };
 
   const handleNewNotificationsOpen = () => {
     readNotifications();
@@ -66,9 +68,6 @@ const Header: React.FC = () => {
     setDropOpen(false);
     setSearchOpen(false);
   };
-
- 
-
 
   // Modern dark mode colors
   const headerBg = darkMode
@@ -87,22 +86,28 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`flex items-center justify-between ${headerBg} p-4 shadow-md ${textColor} sticky top-0 z-50`}
+      className={`flex items-center justify-between ${headerBg}  px-3 py-1 shadow-md ${textColor} sticky top-0 z-50`}
     >
       <div className="flex text-2xl font-bold tracking-wide text-center">
-        <div>𝓛𝓸𝓰𝓸</div>
-        <div className="flex-grow mx-4 max-w-[200px]">
+        <div className=" rounded-full transition-colors duration-200 flex items-center">
+          <img
+            src={darkMode ? blueImage : whiteImage}
+            alt={darkMode ? "Dark mode" : "Light mode"}
+            className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain cursor-pointer hover:scale-105 transition-transform"
+          />
+        </div>
+        <div className="flex-grow mx-1 max-w-[250px]">
           {screenWidth > 1000 ? (
             <input
               type="text"
               placeholder="Search..."
-              className={`w-full max-w-xs px-3 py-2 rounded-full border ${searchInputBg} focus:ring-2 focus:ring-blue-300 outline-none shadow-sm transition-all duration-300 ease-in-out text-sm`}
+              className={`w-full mt-3 max-w-xs px-3 py-2 rounded-full border ${searchInputBg} focus:ring-2 focus:ring-blue-300 outline-none shadow-sm transition-all duration-300 ease-in-out text-sm`}
             />
           ) : (
             <FontAwesomeIcon
               icon={faSearch}
               onClick={() => setSearchOpen(!isSearchOpen)}
-              className={`cursor-pointer text-xl ${hoverTextColor}`}
+              className={`cursor-pointer text-xl ${hoverTextColor} mt-1 xs:mt-2 sm:mt-3 md:mt-4 lg:mt-5 xl:mt-6`}
             />
           )}
         </div>
@@ -148,7 +153,6 @@ const Header: React.FC = () => {
 
         <div className="relative">
           <FontAwesomeIcon
-            
             icon={faBell}
             onClick={handleNewNotificationsOpen}
             className={`cursor-pointer text-2xl max-[640px]:text-lg transition-all duration-300 ${hoverTextColor} hover:scale-110`}

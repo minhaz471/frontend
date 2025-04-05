@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosJWT = axios.create({
-  baseURL: "https://deploy1-production-8cf4.up.railway.app",
+  baseURL: "http://localhost:5000",
   withCredentials: true,
 });
 
