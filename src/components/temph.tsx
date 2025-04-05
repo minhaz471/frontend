@@ -26,6 +26,7 @@ const Header: React.FC = () => {
   const { darkMode, toggleTheme } = useTheme();
 
   const generalContext = useContext(GeneralContext);
+
   if (!generalContext) {
     return;
   }
@@ -37,6 +38,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -52,6 +54,7 @@ const Header: React.FC = () => {
     setNotificationOpen(false);
   };
 
+  // const [error, setError] = useState<string | undefined>();
   const readNotifications = async () => {
     const response = await putRequest({}, "/notifications/update");
     generalContext.setUnreadNotificationCount(0);
@@ -83,67 +86,68 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`flex items-center justify-between ${headerBg} px-3 py-1 shadow-md ${textColor} sticky top-0 z-50 h-14`} // Changed height to h-14 (3.5rem)
+      className={`flex items-center justify-between ${headerBg}  px-3 py-1 shadow-md ${textColor} sticky top-0 z-50`}
     >
-      {/* Logo and Search */}
-      <div className="flex items-center">
-        <div className="rounded-full transition-colors duration-200 flex items-center">
+      <div className="flex text-2xl font-bold tracking-wide text-center">
+        <div className=" rounded-full transition-colors duration-200 flex items-center">
           <img
             src={darkMode ? blueImage : whiteImage}
             alt={darkMode ? "Dark mode" : "Light mode"}
-            className="w-8 h-8 sm:w-10 sm:h-10 object-contain cursor-pointer hover:scale-105 transition-transform"
+            className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain cursor-pointer hover:scale-105 transition-transform"
           />
         </div>
-        {screenWidth > 1000 && (
-          <div className="ml-2">
+        <div className="flex-grow mx-1 max-w-[250px]">
+          {screenWidth > 1000 ? (
             <input
               type="text"
               placeholder="Search..."
-              className={`w-full max-w-xs px-3 py-1.5 rounded-full border ${searchInputBg} focus:ring-2 focus:ring-blue-300 outline-none shadow-sm transition-all duration-300 text-sm`}
+              className={`w-full mt-3 max-w-xs px-3 py-2 rounded-full border ${searchInputBg} focus:ring-2 focus:ring-blue-300 outline-none shadow-sm transition-all duration-300 ease-in-out text-sm`}
             />
-          </div>
-        )}
+          ) : (
+            <FontAwesomeIcon
+              icon={faSearch}
+              onClick={() => setSearchOpen(!isSearchOpen)}
+              className={`cursor-pointer text-xl ${hoverTextColor} mt-1 xs:mt-2 sm:mt-3 md:mt-4 lg:mt-5 xl:mt-6`}
+            />
+          )}
+        </div>
       </div>
 
-      {/* Desktop Navigation */}
+      {/* Menu */}
       {screenWidth > 700 ? (
-        <nav className={`flex gap-4 ${textColor}`}>
-          <Link to="/" className={`hover:underline ${hoverTextColor} text-sm`}>
+        <nav className={`flex gap-6 justify-center ${textColor}`}>
+          <Link to="/" className={`hover:underline ${hoverTextColor}`}>
             Home
           </Link>
-          <Link to="#" className={`hover:underline ${hoverTextColor} text-sm`}>
+          <Link to="#" className={`hover:underline ${hoverTextColor}`}>
             Ride Request
           </Link>
-          <Link to="#" className={`hover:underline ${hoverTextColor} text-sm`}>
+          <Link to="#" className={`hover:underline ${hoverTextColor}`}>
             Ride History
           </Link>
-          <Link to="#" className={`hover:underline ${hoverTextColor} text-sm`}>
+          <Link to="#" className={`hover:underline ${hoverTextColor}`}>
             Complain
           </Link>
         </nav>
       ) : (
-        <button
-          className={`text-xl ${hoverTextColor}`}
-          onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          <FontAwesomeIcon icon={faBars} />
-        </button>
+        <div className="flex justify-end">
+          <button
+            className={`text-xl ${hoverTextColor}`}
+            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+        </div>
       )}
 
-      {/* Icons Section */}
-      <div className="flex items-center gap-4">
-        {screenWidth <= 1000 && (
-          <FontAwesomeIcon
-            icon={faSearch}
-            onClick={() => setSearchOpen(!isSearchOpen)}
-            className={`cursor-pointer text-lg ${hoverTextColor}`}
-          />
-        )}
+      {/* Desktop Icons */}
+      <div className="flex items-center gap-6">
+        {/* Dark mode toggle button */}
 
         <FontAwesomeIcon
           icon={faEnvelope}
           onClick={handleMessengerOpen}
-          className={`cursor-pointer text-xl transition-all duration-300 ${hoverTextColor} hover:scale-110`}
+          className={`cursor-pointer text-2xl max-[640px]:text-lg transition-all duration-300 ${hoverTextColor} hover:scale-110`}
         />
         {isMessengerOpen && <Messenger />}
 
@@ -151,10 +155,10 @@ const Header: React.FC = () => {
           <FontAwesomeIcon
             icon={faBell}
             onClick={handleNewNotificationsOpen}
-            className={`cursor-pointer text-xl transition-all duration-300 ${hoverTextColor} hover:scale-110`}
+            className={`cursor-pointer text-2xl max-[640px]:text-lg transition-all duration-300 ${hoverTextColor} hover:scale-110`}
           />
           {generalContext.unreadNotificationCount > 0 && (
-            <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+            <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
               {generalContext.unreadNotificationCount}
             </div>
           )}
@@ -163,12 +167,12 @@ const Header: React.FC = () => {
 
         <Link to={`/${user?.id}`} className="relative">
           <div
-            className={`w-8 h-8 rounded-full p-[1px] ${darkMode ? "bg-gradient-to-r from-gray-700 to-gray-500" : "bg-gradient-to-r from-blue-800 to-blue-500"} transition-all hover:scale-110`}
+            className={`w-10 h-10 max-[640px]:w-8 max-[640px]:h-8 rounded-full p-[2px] ${darkMode ? "bg-gradient-to-r from-gray-700 to-gray-500" : "bg-gradient-to-r from-blue-800 to-blue-500"} transition-all hover:scale-110 focus:scale-105`}
           >
             <img
               src={user?.profilePic}
               alt="Profile"
-              className="w-full h-full object-cover rounded-full border border-transparent hover:border-blue-300"
+              className="w-full h-full object-cover rounded-full border-2 border-transparent transition-all hover:border-blue focus:border-white hover:brightness-90 focus:brightness-90"
             />
           </div>
         </Link>
@@ -176,50 +180,44 @@ const Header: React.FC = () => {
         <FontAwesomeIcon
           onClick={() => setDropOpen(!isDropOpen)}
           icon={faAngleDown}
-          className={`cursor-pointer text-xl transition-all duration-300 ${hoverTextColor} hover:scale-110`}
+          className={`cursor-pointer text-2xl max-[640px]:text-lg transition-all duration-300 ${hoverTextColor} hover:scale-110`}
         />
       </div>
       {isDropOpen && <DropDown />}
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="fixed top-14 left-0 w-full h-[calc(100vh-56px)] bg-black bg-opacity-50 flex justify-center items-start z-50">
+        <div className="fixed top-[64px] left-0 w-full h-[calc(100vh-64px)] bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div
-            className={`${mobileMenuBg} ${mobileMenuText} shadow-lg rounded-b-md p-4 flex flex-col gap-3 w-full`}
+            className={`${mobileMenuBg} ${mobileMenuText} shadow-lg rounded-md p-8 flex flex-col gap-6 w-full h-full`}
           >
             <button
-              className={`absolute top-2 right-2 text-xl ${mobileMenuText}`}
+              className={`absolute top-4 right-4 text-2xl ${mobileMenuText}`}
               onClick={() => setMobileMenuOpen(false)}
             >
               ✕
             </button>
             <Link
-              to="/"
-              className={`text-base py-2 px-3 rounded ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
-            >
-              Home
-            </Link>
-            <Link
               to="#"
-              className={`text-base py-2 px-3 rounded ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
+              className={`text-lg text-center ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"} p-4 rounded`}
             >
               Ride Request
             </Link>
             <Link
               to="#"
-              className={`text-base py-2 px-3 rounded ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
-            >
-              Ride History
-            </Link>
-            <Link
-              to="#"
-              className={`text-base py-2 px-3 rounded ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
+              className={`text-lg text-center ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"} p-4 rounded`}
             >
               Complain
             </Link>
+            <Link
+              to="#"
+              className={`text-lg text-center ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"} p-4 rounded`}
+            >
+              Home
+            </Link>
+            {/* Dark mode toggle in mobile menu */}
             <button
               onClick={toggleTheme}
-              className={`text-base py-2 px-3 rounded flex items-center gap-2 ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
+              className={`text-lg text-center ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"} p-4 rounded flex items-center justify-center gap-2`}
             >
               <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
               {darkMode ? "Light Mode" : "Dark Mode"}
@@ -228,14 +226,13 @@ const Header: React.FC = () => {
         </div>
       )}
 
-      {/* Search Modal */}
       {isSearchOpen && (
-        <div className="fixed top-14 left-0 w-full h-[calc(100vh-56px)] flex justify-center items-start z-50 pt-4">
+        <div className="fixed top-[34px] left-0 w-full h-[calc(100vh-64px)] flex justify-center items-center z-50">
           <div
-            className={`${mobileMenuBg} ${mobileMenuText} shadow-lg rounded-md p-4 w-[95%] max-w-lg ${darkMode ? "bg-opacity-95" : "bg-opacity-90"}`}
+            className={`${mobileMenuBg} ${mobileMenuText} shadow-lg rounded-md p-8 w-full h-[80vh] flex flex-col items-center relative ${darkMode ? "bg-opacity-95" : "bg-opacity-90"}`}
           >
             <button
-              className={`absolute top-2 right-2 text-xl ${mobileMenuText}`}
+              className={`absolute top-4 right-4 text-2xl ${mobileMenuText}`}
               onClick={() => setSearchOpen(false)}
             >
               ✕
@@ -243,9 +240,10 @@ const Header: React.FC = () => {
             <input
               type="text"
               placeholder="Search..."
-              className={`w-full px-4 py-2 rounded-full border ${darkMode ? "border-gray-600 bg-gray-700 text-white focus:border-blue-400" : "border-gray-300 bg-white text-black focus:border-blue-500"} outline-none text-base shadow-md focus:ring-2 focus:ring-blue-300`}
+              className={`w-[100%] max-w-lg px-4 py-3 rounded-full border-2 ${darkMode ? "border-gray-600 bg-gray-700 text-white focus:border-blue-400" : "border-gray-300 bg-white text-black focus:border-blue-500"} outline-none text-lg mt-4 shadow-md focus:ring-2 focus:ring-blue-300`}
             />
-            <div className="mt-2 text-center text-sm">No Search Results</div>
+
+            <div className="results">No Search Results</div>
           </div>
         </div>
       )}

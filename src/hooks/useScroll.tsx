@@ -13,7 +13,7 @@ function useChatScroll<T extends HTMLElement>(dep: any) {
 		if (isAtBottom) {
 			setTimeout(() => {
 				container.scrollTop = container.scrollHeight;
-			}, 50); // Small delay to ensure new messages are rendered
+			}, 50); 
 		}
 	}, [dep]);
 

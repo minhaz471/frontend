@@ -14,9 +14,10 @@ import { useSocketContext } from "./context/socketContext";
 import UnauthenticatedHeader from "./components/UnauthenticatedHeader";
 import { GeneralContext } from "./context/generalContext";
 
+
 const App: React.FC = () => {
   const auth = useContext(AuthContext);
-  const { darkMode } = useTheme(); // Get dark mode state
+  const { darkMode } = useTheme(); 
   const { socket } = useSocketContext();
   const [notifications, setNotifications] = useState<any[]>([]);
   console.log(notifications);
