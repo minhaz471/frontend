@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
-import RidePosts from "../components/RidePosts";
+// import RidePosts from "../components/RidePosts";
 import HomeRightBar from "../components/HomeRightBar";
 import HomeLeftBar from "../components/HomeLeftBar";
 import { useTheme } from "../context/themeContext";
