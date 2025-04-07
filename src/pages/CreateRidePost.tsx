@@ -23,6 +23,8 @@ const CreateRidePost = () => {
   const [error, setError] = useState<string | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
 
+  console.log(error);
+
   const [selectedFromLocation, setSelectedFromLocation] = useState<
     [number, number] | null
   >(null);
