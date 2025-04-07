@@ -124,7 +124,7 @@ const Dashboard = () => {
 
           {/* Ride Posts */}
           <div className={`p-4 rounded-xl border ${sidebarBg} transition-colors duration-300`}>
-            <RidePosts />
+            {/* <RidePosts /> */}
           </div>
         </div>
 
