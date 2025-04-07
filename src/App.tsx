@@ -13,6 +13,7 @@ import { useTheme } from "./context/themeContext"; // Import the theme context
 import { useSocketContext } from "./context/socketContext";
 import UnauthenticatedHeader from "./components/UnauthenticatedHeader";
 import { GeneralContext } from "./context/generalContext";
+import UpdateVehicleInfo from "./pages/UpdateVehicleInfo";
 
 
 const App: React.FC = () => {
@@ -52,7 +53,7 @@ const App: React.FC = () => {
   // Dark mode background and text colors
   const appBackground = darkMode 
     ? "bg-gray-900 text-gray-100 min-h-screen" 
-    : "bg-gray-50 text-gray-900 min-h-screen";
+    : " text-gray-900 min-h-screen";
 
   return (
     <div className={!user? "": appBackground}>
@@ -60,7 +61,7 @@ const App: React.FC = () => {
       {user ? <Header /> : <UnauthenticatedHeader />}
 
       {/* Main content area */}
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-1 py-2">
         <Routes>
           <Route
             path="/"
@@ -102,6 +103,9 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/update-vehicle-info" element={<ProtectedRoute>
+            <UpdateVehicleInfo></UpdateVehicleInfo>
+          </ProtectedRoute>}></Route>
         </Routes>
       </main>
 

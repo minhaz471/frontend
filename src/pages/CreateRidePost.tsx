@@ -21,8 +21,8 @@ const CreateRidePost = () => {
   const [fromSuggestions, setFromSuggestions] = useState<Location[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
 
-  console.log(error);
   const [selectedFromLocation, setSelectedFromLocation] = useState<
     [number, number] | null
   >(null);
@@ -35,19 +35,6 @@ const CreateRidePost = () => {
   if (!auth) {
     return null;
   }
-
-  // Dynamic styles based on dark mode
-  // const containerStyles = darkMode
-  //   ? "bg-gray-900 text-white border-gray-700"
-  //   : "bg-white text-gray-900 border-gray-200";
-
-  // const inputStyles = darkMode
-  //   ? "bg-gray-800 border-gray-600 focus:ring-blue-500 hover:border-blue-400"
-  //   : "bg-gray-50 border-gray-300 focus:ring-blue-400 hover:border-blue-300";
-
-  // const suggestionStyles = darkMode
-  //   ? "bg-gray-800 border-gray-600 hover:bg-gray-700"
-  //   : "bg-white border-gray-200 hover:bg-gray-100";
 
   const fetchLocations = async (query: string, setSuggestions: any) => {
     if (query.length < 3) {
@@ -66,6 +53,27 @@ const CreateRidePost = () => {
     }
   };
 
+  // Fetch route from OSRM
+  const fetchRoute = async (start: [number, number], end: [number, number]) => {
+    try {
+      const response = await fetch(
+        `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`
+      );
+      const data = await response.json();
+      
+      if (data.routes && data.routes[0]) {
+        const coordinates = data.routes[0].geometry.coordinates.map(
+          (coord: [number, number]) => [coord[1], coord[0]] as [number, number]
+        );
+        setRouteCoordinates(coordinates);
+      }
+    } catch (error) {
+      console.error('Error fetching route:', error);
+      // Fallback to straight line if routing fails
+      setRouteCoordinates([start, end]);
+    }
+  };
+
   useEffect(() => {
     const debounce = setTimeout(
       () => fetchLocations(toQuery, setToSuggestions),
@@ -81,6 +89,12 @@ const CreateRidePost = () => {
     );
     return () => clearTimeout(debounce);
   }, [fromQuery]);
+
+  useEffect(() => {
+    if (selectedFromLocation && selectedToLocation) {
+      fetchRoute(selectedFromLocation, selectedToLocation);
+    }
+  }, [selectedFromLocation, selectedToLocation]);
 
   const handleLocationSelect = (location: Location, isFrom: boolean) => {
     const coords: [number, number] = [
@@ -122,46 +136,33 @@ const CreateRidePost = () => {
     }
   };
 
-  return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-800 dark:bg-gray-800 rounded-3xl ">
-      {/* Left Map */}
-      <div className="lg:w-1/3 h-64 lg:h-auto">
-        {selectedFromLocation ? (
-          <Map
-            center={selectedFromLocation}
-            zoom={13}
-            darkMode={darkMode}
-            className="h-full w-full rounded-[14px]"
-          />
-        ) : (
-          <div className="h-full w-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-[20px]">
-            <p className="text-gray-500 dark:text-gray-300">
-              Select pickup location to view map
-            </p>
-          </div>
-        )}
-      </div>
+  // Calculate center point between two locations for map view
+  const getMapCenter = () => {
+    if (selectedFromLocation && selectedToLocation) {
+      return [
+        (selectedFromLocation[0] + selectedToLocation[0]) / 2,
+        (selectedFromLocation[1] + selectedToLocation[1]) / 2
+      ] as [number, number];
+    }
+    return selectedFromLocation || selectedToLocation || [0, 0];
+  };
 
+  return (
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-800 dark:bg-gray-800 rounded-3xl">
       {/* Form Container */}
-      <div
-        className={`lg:w-1/3 p-4 lg:p-6 transition-colors duration-300 ${
+      <div className={`lg:w-1/3 p-4 lg:p-6 transition-colors duration-300 ${
+        darkMode
+          ? "bg-gray-900 border-gray-700 text-gray-100"
+          : "bg-white border-gray-200 text-gray-800"
+      }`}>
+        <div className={`p-6 shadow-xl rounded-2xl border ${
           darkMode
-            ? "bg-gray-900 border-gray-700 text-gray-100" // Dark mode
-            : "bg-white border-gray-200 text-gray-800" // Light mode
-        }`}
-      >
-        <div
-          className={`p-6 shadow-xl rounded-2xl border ${
-            darkMode
-              ? "bg-gray-800 border-gray-700 text-white"
-              : "bg-white border-gray-200 text-gray-800"
-          }`}
-        >
-          <h3
-            className={`text-2xl font-bold text-center ${
-              darkMode ? "text-white" : "text-gray-800"
-            }`}
-          >
+            ? "bg-gray-800 border-gray-700 text-white"
+            : "bg-white border-gray-200 text-gray-800"
+        }`}>
+          <h3 className={`text-2xl font-bold text-center ${
+            darkMode ? "text-white" : "text-gray-800"
+          }`}>
             Create Ride Post
           </h3>
 
@@ -180,13 +181,11 @@ const CreateRidePost = () => {
                 }`}
               />
               {fromSuggestions.length > 0 && (
-                <ul
-                  className={`absolute w-full border shadow-md mt-1 rounded-md z-20 ${
-                    darkMode
-                      ? "bg-gray-700 border-gray-600"
-                      : "bg-white border-gray-200"
-                  }`}
-                >
+                <ul className={`absolute w-full border shadow-md mt-1 rounded-md z-20 ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600"
+                    : "bg-white border-gray-200"
+                }`}>
                   {fromSuggestions.map((place: Location) => (
                     <li
                       key={place.place_id}
@@ -218,13 +217,11 @@ const CreateRidePost = () => {
                 }`}
               />
               {toSuggestions.length > 0 && (
-                <ul
-                  className={`absolute w-full border shadow-md mt-1 rounded-md z-20 ${
-                    darkMode
-                      ? "bg-gray-700 border-gray-600"
-                      : "bg-white border-gray-200"
-                  }`}
-                >
+                <ul className={`absolute w-full border shadow-md mt-1 rounded-md z-20 ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600"
+                    : "bg-white border-gray-200"
+                }`}>
                   {toSuggestions.map((place: Location) => (
                     <li
                       key={place.place_id}
@@ -310,29 +307,31 @@ const CreateRidePost = () => {
           </form>
         </div>
       </div>
-      {/* Right Map */}
-      <div
-        className="lg:w-1/3 h-64 lg:h-auto relative overflow-hidden 
-                rounded-2xl border-2 transition-all duration-300
-                bg-white dark:bg-gray-800
-                
-             "
-      >
-        {selectedToLocation ? (
+
+      {/* Single Map Container */}
+      <div className="lg:w-2/3 h-[500px] lg:h-auto sticky overflow-hidden rounded-2xl border-2 transition-all duration-300 bg-white dark:bg-gray-800">
+        {selectedFromLocation || selectedToLocation ? (
           <Map
-            center={selectedToLocation}
+            center={getMapCenter()}
             zoom={13}
             darkMode={darkMode}
             className="absolute inset-0 rounded-[14px]"
+            markers={[
+              ...(selectedFromLocation ? [{
+                position: selectedFromLocation,
+                popup: "Pickup Location"
+              }] : []),
+              ...(selectedToLocation ? [{
+                position: selectedToLocation,
+                popup: "Destination"
+              }] : [])
+            ]}
+            route={routeCoordinates}
           />
         ) : (
-          <div
-            className="absolute inset-0 flex items-center justify-center 
-                   bg-gray-100 dark:bg-gray-700 rounded-[14px]
-                   transition-colors duration-300"
-          >
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-[14px] transition-colors duration-300">
             <p className="text-gray-500 dark:text-gray-300 text-center px-4">
-              Select destination to view map
+              Select locations to view the map and route
             </p>
           </div>
         )}
