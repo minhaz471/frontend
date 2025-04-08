@@ -99,7 +99,8 @@ const Dashboard = () => {
         {/* Main Content */}
         <div className="lg:col-span-6">
           {/* Desktop Search & Post Button */}
-          <div className="hidden sm:flex justify-center items-center mb-6 gap-4">
+          <div className="hidden sm:flex justify-center items-center mb-6 gap-4 border border-gray-200 rounded-md">
+
             <div className="ml-10 relative flex-1">
               <input
                 type="text"
