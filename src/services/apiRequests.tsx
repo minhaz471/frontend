@@ -31,17 +31,16 @@ export const postRequest = async (
   setLoading?: React.Dispatch<React.SetStateAction<boolean>>, 
   setError?: React.Dispatch<React.SetStateAction<null | string>>
 ) => {
+  console.log(accessToken);
   try {
     if (setError) setError(null);
     if (setLoading) setLoading(true); 
-    console.log(accessToken);
 
     const res = await axiosJWT.post(url, data);
-    console.log("Response: ", res);
 
     return res.data;
   } catch (err: any) {
-    if (setError) setError(err.message); 
+    if (setError) setError(err.response.data.error); 
   } finally {
     if (setLoading) setLoading(false); 
   }
@@ -52,12 +51,12 @@ export const postRequest = async (
 export const getRequest = async (
   url: string,
   accessToken:string | null,
-  setLoading:React.Dispatch<React.SetStateAction<boolean>>,
-  setError: React.Dispatch<React.SetStateAction<null | string>>
+  setLoading?:React.Dispatch<React.SetStateAction<boolean>>,
+  setError?: React.Dispatch<React.SetStateAction<null | string>>
 ) => {
   try {
-    setError(null);
-    setLoading(true);
+    setError?.(null);
+    setLoading?.(true);
     const res = await axiosJWT.get(url,
       {
         headers: {
@@ -69,10 +68,10 @@ export const getRequest = async (
     return res.data;
 
   } catch (err: any) {
-    setError(err.message);
+    setError?.(err.response.data.error);
     
   } finally {
-    setLoading(false);
+    setLoading?.(false);
 
   }
 }
