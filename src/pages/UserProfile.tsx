@@ -63,7 +63,6 @@ const UserProfile = () => {
   const [showPicOptions, setShowPicOptions] = useState(false);
   const [showRating, setShowRating] = useState<boolean>(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const picOptionsRef = useRef<HTMLDivElement>(null);
 
   const auth = useContext(AuthContext);
