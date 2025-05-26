@@ -17,7 +17,7 @@ export const useSocketContext = (): ISocketContext => {
 	return context;
 };
 
-const socketURL = "https://campuscarawanbackenddeployed-production.up.railway.app";
+const socketURL = "https://backend-rust-pi.vercel.app";
 
 const SocketContextProvider = ({ children }: { children: ReactNode }) => {
 	const socketRef = useRef<Socket | null>(null);
