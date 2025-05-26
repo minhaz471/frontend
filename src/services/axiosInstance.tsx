@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosJWT = axios.create({
-  baseURL: "https://campuscarawanbackenddeployed-production.up.railway.app",
+  baseURL: "https://backend-rust-pi.vercel.app",
   withCredentials: true,
 });
 
